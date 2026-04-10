@@ -19,21 +19,28 @@
 
 ### 执行流程
 
-1. **检测/安装 Node.js** - 未安装则从 npmmirror 下载 Node.js v22.14.0 并静默安装
+1. **检测/安装 Node.js** - 未安装则从 npmmirror 下载 Node.js v22.14.0 并静默安装（显示实时下载进度）
 2. **检测 npm** - 确认 npm 可用
-3. **检测 npm 全局路径** - 确保全局 bin 目录在 PATH 中
-4. **安装 Claude Code** - `npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com`
+3. **检测 npm 全局路径** - 确保全局目录在 PATH 中（兼容 npm 11.x）
+4. **安装 Claude Code** - `npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com`（显示实时安装进度）
 5. **验证安装** - 检查 `claude` 命令是否可用，输出版本号
 
 ### 使用方式
 
 ```
 双击运行，或右键"以管理员身份运行"（安装 Node.js 时需要管理员权限）
+脚本执行完毕后窗口会保持打开，不会闪退。
 ```
 
 ### 日志
 
 安装日志保存在脚本同目录的 `logs/` 文件夹下。
+
+### 兼容性说明
+
+- 支持中文 Windows 系统（日期格式通过 wmic 获取，避免 `%date%` 格式问题）
+- 兼容 npm 11.x（使用 `npm config get prefix` 替代已废弃的 `npm bin -g`）
+- Node.js 下载和 npm 安装过程中均显示实时进度
 
 ---
 
@@ -50,6 +57,7 @@
 ```
 双击运行，根据提示选择模式并逐项输入配置值。
 留空直接回车可跳过该项（保留原有值不变）。
+部分配置项有推荐默认值，留空回车会自动填入。
 配置完成后需要重新打开终端才能生效。
 ```
 
@@ -123,3 +131,4 @@
 - 智谱 GLM 模式下，`ANTHROPIC_AUTH_TOKEN` 和 `ANTHROPIC_API_KEY` 是不同的变量，不要混用
 - 选择 GLM-5.1 时，模型映射通过 PowerShell 合并写入 `settings.json`，已有配置不会丢失
 - 智谱 API Key 在 [智谱开放平台](https://open.bigmodel.cn) 获取
+- 安装过程中如果网络不稳定（ECONNRESET），请重新运行脚本重试
